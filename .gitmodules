@@ -1,0 +1,3 @@
+[submodule "!remotes"]
+	path = !remotes
+	url = https://github.com/microsoft/vscode-ai-toolkit.git
