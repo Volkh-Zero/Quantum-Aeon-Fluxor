@@ -1,4 +1,4 @@
-# Quantum Eon Stone Project
+# Quantum Æon Fluxor Project
 
 This project is a collaborative framework for inquiry into consciousness, complexity, intelligence, and emergent phenomena. It supports markdown documentation, philosophical frameworks, and scientific principles. The workspace is designed for extensibility, including AI-driven conversational agents and dynamic knowledge base protocols.
 
