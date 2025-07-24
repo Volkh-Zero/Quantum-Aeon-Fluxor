@@ -10,7 +10,6 @@ import os
 import sys
 from azure.ai.inference import ChatCompletionsClient
 from azure.ai.inference.models import AssistantMessage, UserMessage, ToolMessage
-from azure.ai.inference.models import TextContentItem
 from azure.core.credentials import AzureKeyCredential
 from azure.core.exceptions import HttpResponseError
 
