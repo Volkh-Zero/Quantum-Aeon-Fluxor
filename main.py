@@ -14,6 +14,9 @@ except ImportError:
     QACORE_AVAILABLE = False
     print("QÆCore prompt engine not available. Running in basic mode.")
 
+# --- Constants ---
+MODEL_NAME = 'gemini-1.5-pro'
+
 def _get_safety_settings(block_none=True):
     """Returns a list of safety settings.
 
@@ -51,7 +54,7 @@ def _initialize_model(api_key):
     if not api_key:
         raise ValueError("GOOGLE_API_KEY environment variable not set.")
     genai.configure(api_key=api_key)
-    return genai.GenerativeModel('gemini-1.5-pro')
+    return genai.GenerativeModel(MODEL_NAME)
 
 def run_generative_model():
     """
@@ -87,6 +90,16 @@ def run_generative_model():
     )
     print(response.text)
 
+def _run_and_print_demo(title, model, prompt, config):
+    """Helper function to run a demo section, generate content, and print it."""
+    print(title)
+    print("-" * len(title))
+    try:
+        response = model.generate_content(prompt, generation_config=config, safety_settings=_get_safety_settings())
+        print(f"{response.text}\n\n{'='*60}\n")
+    except Exception as e:
+        print(f"An error occurred: {e}\n\n{'='*60}\n")
+
 def run_qacore_demo():
     """Demonstrate QÆCore capabilities if available"""
     if not QACORE_AVAILABLE:
@@ -100,47 +113,38 @@ def run_qacore_demo():
     print("=== QÆCore Demonstration ===\n")
 
     # 1. Consciousness Inquiry
-    print("1. Consciousness Inquiry:")
-    print("-" * 30)
     consciousness_prompt = prompt_generator.generate_consciousness_inquiry(
         "complexity science",
         "How does consciousness emerge from complex systems?",
         "transcendent"
     )
-    config = GenerationConfig(
-    temperature=0.8,
-    top_p=0.9,
-    top_k=50,
-    max_output_tokens=8192
+    config_consciousness = GenerationConfig(
+        temperature=0.8,
+        top_p=0.9,
+        top_k=50,
+        max_output_tokens=8192
     )
-    response = model.generate_content(consciousness_prompt, generation_config=config, safety_settings=_get_safety_settings())
-    print(f"{response.text}\n\n{'='*60}\n")
+    _run_and_print_demo("1. Consciousness Inquiry", model, consciousness_prompt, config_consciousness)
 
     # 2. Eonic Scrutiny
-    print("2. Eonic Scrutiny:")
-    print("-" * 20)
     eonic_prompt = prompt_generator.generate_eonic_scrutiny("emergence of language")
     config_eonic = GenerationConfig(
-    temperature=0.75,
-    top_p=0.85,
-    top_k=45,
-    max_output_tokens=8192
+        temperature=0.75,
+        top_p=0.85,
+        top_k=45,
+        max_output_tokens=8192
     )
-    response = model.generate_content(eonic_prompt, generation_config=config_eonic, safety_settings=_get_safety_settings())
-    print(f"{response.text}\n\n{'='*60}\n")
+    _run_and_print_demo("2. Eonic Scrutiny", model, eonic_prompt, config_eonic)
 
     # 3. Meta-Link Session
-    print("3. Meta-Link Session:")
-    print("-" * 22)
     meta_prompt = prompt_generator.generate_meta_link("QÆCore framework effectiveness")
     config_meta = GenerationConfig(
-    temperature=0.95,
-    top_p=0.98,
-    top_k=64,
-    max_output_tokens=8192
+        temperature=0.95,
+        top_p=0.98,
+        top_k=64,
+        max_output_tokens=8192
     )
-    response = model.generate_content(meta_prompt, generation_config=config_meta, safety_settings=_get_safety_settings())
-    print(response.text)
+    _run_and_print_demo("3. Meta-Link Session", model, meta_prompt, config_meta)
 
 if __name__ == "__main__":
     print("Choose mode:")
