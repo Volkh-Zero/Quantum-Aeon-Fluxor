@@ -8,6 +8,7 @@ for context-aware interactions.
 """
 import os
 import sys
+import json
 from mistralai import Mistral, UserMessage, AssistantMessage
 
 # --- Configuration ---
@@ -15,19 +16,42 @@ SERVER_URL = "https://models.github.ai/inference"
 DEFAULT_MODEL = "mistral-ai/Codestral-2501"
 DEFAULT_TEMPERATURE = 0.8
 DEFAULT_TOP_P = 0.1
+HISTORY_FILE = "chat_history.json"
 # ---------------------
 
-def get_github_token():
+def get_GH_TOKEN():
     """
     Retrieves the GitHub token from the environment variables.
     Exits the script with an error message if the token is not found.
     """
-    token = os.environ.get("GITHUB_TOKEN")
+    token = os.environ.get("GH_TOKEN")
     if not token:
-        print("Error: The 'GITHUB_TOKEN' environment variable is not set.", file=sys.stderr)
+        print("Error: The 'GH_TOKEN' environment variable is not set.", file=sys.stderr)
         print("Please create a Personal Access Token (PAT) on GitHub and set it.", file=sys.stderr)
         sys.exit(1)
     return token
+
+def load_history():
+    """Loads chat history from file."""
+    try:
+        with open(HISTORY_FILE, "r") as f:
+            history = json.load(f)
+            # Convert the loaded history into Message objects
+            messages = [
+                UserMessage(content=msg['content']) if msg['role'] == 'user' else AssistantMessage(content=msg['content'])
+                for msg in history
+            ]
+        return messages
+    except FileNotFoundError:
+        return []
+
+def save_history(messages):
+    """Saves chat history to file."""
+    history = [{'role': 'user', 'content': msg.content} if isinstance(msg, UserMessage) \
+               else {'role': 'assistant', 'content': msg.content} for msg in messages]
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(history, f, indent=4)
+
 
 def main():
     """
@@ -37,7 +61,7 @@ def main():
     Create your PAT token by following instructions here: 
     https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
     """
-    api_key = get_github_token()
+    api_key = get_GH_TOKEN()
 
     try:
         client = Mistral(
@@ -53,7 +77,7 @@ def main():
     print("-" * 20)
 
     # This list will store the conversation history
-    messages = []
+    messages = load_history()
     while True:
         try:
             user_input = input("You: ").strip()
@@ -78,6 +102,7 @@ def main():
                 assistant_response = response.choices[0].message
                 print(f"Assistant: {assistant_response.content}")
                 messages.append(assistant_response)  # Add assistant's reply to history
+                save_history(messages)  # Save after each turn
             else:
                 print("Error: No response received from the model.", file=sys.stderr)
                 # Remove the last user message since we couldn't get a response
