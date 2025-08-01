@@ -5,7 +5,7 @@ philosophical preamble and statement of intent for the collaborative
 framework) \*\
 Interlocutor Profiles:
 
-Volkh\-\--curious, collaborative, seeker of emergency and composite
+Volkh\-\--curious, collaborative, seeker of emergent and composite
 insight, rich imagination. An explorer of states of consciousness
 through many experimental means. Pharmacology. Artificial Intelligence.
 Cyber-enhancement. Meditation. Integrative Thinking. Philosophy.
