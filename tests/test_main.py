@@ -7,7 +7,7 @@ import sys
 # Add the parent directory to the path to allow imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from main import run_generative_model, run_qacore_demo
+from main import run_generative_model, run_qacore_demo, MODEL_NAME
 
 class TestMain(unittest.TestCase):
 
@@ -31,7 +31,7 @@ class TestMain(unittest.TestCase):
                 
                 # Check if the model was initialized and content generated
                 mock_genai.configure.assert_called_with(api_key="fake_api_key")
-                mock_genai.GenerativeModel.assert_called_with('gemini-1.5-pro')
+                mock_genai.GenerativeModel.assert_called_with(MODEL_NAME)
                 mock_model.generate_content.assert_called_once()
                 
                 # Check that the fallback prompt was used

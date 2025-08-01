@@ -7,7 +7,10 @@ import os
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold, GenerationConfig, SafetySetting
 import sys
-import os
+
+# --- Constants ---
+MODEL_NAME = 'gemini-2.5-pro'
+
 sys.path.append(os.path.join(os.path.dirname(__file__), 'Agent-META-Processes'))
 
 from qacore_prompt_engine import (
@@ -33,7 +36,7 @@ class QÆCoreGeminiInterface:
                 raise ValueError("GOOGLE_API_KEY environment variable not set.")
             
             genai.configure(api_key=api_key)
-            self.model = genai.GenerativeModel('gemini-1.5-pro')
+            self.model = genai.GenerativeModel(MODEL_NAME)
             
         except Exception as e:
             print(f"Error setting up Gemini: {e}")
