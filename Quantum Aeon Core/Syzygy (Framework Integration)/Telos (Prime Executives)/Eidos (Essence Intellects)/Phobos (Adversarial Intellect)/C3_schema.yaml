@@ -1,0 +1,65 @@
+C3_Profile:
+  user_id: string
+  created_at: datetime
+  last_updated: datetime
+  identity:
+    display_name: string
+    preferred_language: string
+    timezone: string
+    developer_level:
+    - beginner
+    - intermediate
+    - advanced
+    - expert
+    primary_domains:
+    - string
+  cognitive_model:
+    reasoning_style:
+    - deductive
+    - inductive
+    - abductive
+    - hybrid
+    preferred_strategies:
+    - string
+    reflection_tendency: float
+    exploration_bias: float
+  interaction_history:
+    total_sessions: int
+    avg_session_length_minutes: float
+    most_used_tools:
+    - string
+    recent_tasks:
+    - timestamp: datetime
+      task_type: string
+      outcome: string
+      strategy_used: string
+  knowledge_graph_links:
+    known_concepts:
+    - string
+    weak_areas:
+    - string
+    preferred_libraries:
+    - string
+  adaptation_log:
+    last_prompt_tuning: datetime
+    last_strategy_shift: datetime
+    recent_adaptations:
+    - type: string
+      reason: string
+      outcome: string
+      timestamp: datetime
+  feedback_profile:
+    avg_feedback_score: float
+    code_acceptance_rate: float
+    correction_patterns:
+    - string
+    LLM_as_Judge_alignment: float
+  goals_and_trajectory:
+    current_focus: string
+    long_term_goals:
+    - string
+    preferred_learning_style:
+    - hands-on
+    - theoretical
+    - visual
+    - mixed
