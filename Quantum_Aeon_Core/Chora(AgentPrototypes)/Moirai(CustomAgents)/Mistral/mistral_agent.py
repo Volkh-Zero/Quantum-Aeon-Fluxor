@@ -8,8 +8,23 @@ for context-aware interactions.
 """
 import os
 import sys
+import importlib.util
 from mistralai import Mistral, UserMessage, AssistantMessage
-from ..base_agent import BaseAgent
+
+# Import base_agent using importlib to handle special characters in path
+base_agent_path = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),  # Go up two levels to Moirai(CustomAgents)
+    "base_agent.py"
+)
+
+try:
+    spec = importlib.util.spec_from_file_location("base_agent", base_agent_path)
+    base_agent = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(base_agent)
+    BaseAgent = base_agent.BaseAgent
+except (ImportError, FileNotFoundError) as e:
+    print(f"Error loading base_agent: {e}")
+    raise
 
 # --- Configuration ---
 SERVER_URL = "https://models.github.ai/inference"
@@ -30,9 +45,9 @@ def get_GH_TOKEN():
         sys.exit(1)
     return token
 
-class MinstralAgent(BaseAgent):
+class MistralAgent(BaseAgent):
     def __init__(self):
-        super().__init__("Minstral")
+        super().__init__("Mistral")
         self.client = self._initialize_client()
 
     def _initialize_client(self):
@@ -102,7 +117,7 @@ def main():
     """
     Main function to run the interactive chat client.
     """
-    agent = MinstralAgent()
+    agent = MistralAgent()
     agent.chat()
 
 if __name__ == "__main__":

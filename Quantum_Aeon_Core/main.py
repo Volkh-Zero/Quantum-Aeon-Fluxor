@@ -1,19 +1,33 @@
 import os
 import sys
+import importlib.util
 import argparse
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold, GenerationConfig
 from google.generativeai.protos import SafetySetting
 
-# Add Agent-META-Processes to path for QÆCore imports
-sys.path.append(os.path.join(os.path.dirname(__file__), 'Agent-META-Processes'))
+# Add the project root to the Python path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# Import qacore_prompt_engine using importlib
+qacore_path = os.path.join(
+    os.path.dirname(__file__),
+    "Syzygy(Framework_Integration)",
+    "Integration_Prototyping",
+    "qacore_prompt_engine.py"
+)
 
 try:
-    from qacore_prompt_engine import QuantumPromptGenerator
+    spec = importlib.util.spec_from_file_location("qacore_prompt_engine", qacore_path)
+    qacore_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(qacore_module)
+    QuantumPromptGenerator = qacore_module.QuantumPromptGenerator
     QACORE_AVAILABLE = True
-except ImportError:
+except (ImportError, FileNotFoundError) as e:
     QACORE_AVAILABLE = False
-    print("QÆCore prompt engine not available. Running in basic mode.")
+    print(f"QÆCore prompt engine not available: {e}. Running in basic mode.")
 
 # --- Constants ---
 MODEL_NAME = 'gemini-2.5-pro'

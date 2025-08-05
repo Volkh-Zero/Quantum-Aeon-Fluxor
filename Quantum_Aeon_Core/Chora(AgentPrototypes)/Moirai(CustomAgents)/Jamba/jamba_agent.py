@@ -8,11 +8,28 @@ for context-aware interactions.
 """
 import os
 import sys
+import importlib.util
 from azure.ai.inference import ChatCompletionsClient
 from azure.ai.inference.models import AssistantMessage, UserMessage
 from azure.core.credentials import AzureKeyCredential
 from azure.core.exceptions import HttpResponseError
-from ..base_agent import BaseAgent
+
+# Import base_agent using importlib to handle special characters in path
+base_agent_path = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "Chora(AgentPrototypes)",
+    "Moirai(CustomAgents)",
+    "base_agent.py"
+)
+
+try:
+    spec = importlib.util.spec_from_file_location("base_agent", base_agent_path)
+    base_agent = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(base_agent)
+    BaseAgent = base_agent.BaseAgent
+except (ImportError, FileNotFoundError) as e:
+    print(f"Error loading base_agent: {e}")
+    raise
 
 # --- Configuration ---
 ENDPOINT = "https://models.github.ai/inference"

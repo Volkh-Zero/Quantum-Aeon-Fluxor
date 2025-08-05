@@ -4,21 +4,37 @@ Combines the Quantum Æon Fluxor prompt engineering system with Gemini AI
 """
 
 import os
+import sys
+import importlib.util
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold, GenerationConfig, SafetySetting
-import sys
 
 # --- Constants ---
 MODEL_NAME = 'gemini-2.5-pro'
 
-sys.path.append(os.path.join(os.path.dirname(__file__), 'Agent-META-Processes'))
-
-from qacore_prompt_engine import (
-    QuantumPromptGenerator, 
-    QÆMode, 
-    PlausibilityLevel,
-    QÆCorePromptLibrary
+# Import qacore_prompt_engine using importlib
+qacore_path = os.path.join(
+    os.path.dirname(__file__),
+    "Syzygy(Framework_Integration)",
+    "Integration_Prototyping",
+    "qacore_prompt_engine.py"
 )
+
+# Load the module
+try:
+    spec = importlib.util.spec_from_file_location("qacore_prompt_engine", qacore_path)
+    qacore_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(qacore_module)
+    
+    # Import the required components
+    QuantumPromptGenerator = qacore_module.QuantumPromptGenerator
+    QÆMode = qacore_module.QÆMode
+    PlausibilityLevel = qacore_module.PlausibilityLevel
+    QÆCorePromptLibrary = qacore_module.QÆCorePromptLibrary
+    
+except (ImportError, FileNotFoundError) as e:
+    print(f"Error loading QÆCore prompt engine: {e}")
+    raise
 
 class QÆCoreGeminiInterface:
     """Integration between QÆCore prompt system and Gemini AI"""

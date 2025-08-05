@@ -1,6 +1,6 @@
 """
 QÆCore-Enhanced Prompt Engineering System
-Integrates with Quantum Eon Stone Architecture for consciousness research
+Integrates with Quantum Eon Core Architecture for consciousness research
 """
 
 import re
